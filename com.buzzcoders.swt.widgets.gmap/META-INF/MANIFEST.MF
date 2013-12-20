@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Google Map Widget
+Bundle-SymbolicName: com.buzzcoders.swt.widgets.gmap
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.buzzcoders.swt.widgets.gmap.MapActivator
+Bundle-Vendor: Buzzcoders.com
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.apache.commons.httpclient;bundle-version="3.1.0",
+ org.apache.commons.io;bundle-version="2.0.1"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: com.buzzcoders.swt.widgets.gmap;uses:="org.eclipse.ui.plugin,org.osgi.framework",
+ com.buzzcoders.swt.widgets.gmap.browserfunctions;uses:="com.buzzcoders.swt.widgets.map.support,org.eclipse.swt.browser",
+ com.buzzcoders.swt.widgets.gmap.core,
+ com.buzzcoders.swt.widgets.gmap.sample;
+  uses:="com.buzzcoders.swt.widgets.map.core,
+   com.buzzcoders.swt.widgets.map.support,
+   org.eclipse.swt.widgets,
+   org.eclipse.swt.browser",
+ com.buzzcoders.swt.widgets.gmap.support;uses:="com.buzzcoders.swt.widgets.map.core,org.eclipse.swt.browser"
+Bundle-ClassPath: lib/jackson-annotations-2.1.4.jar,
+ lib/jackson-core-2.1.4.jar,
+ lib/jackson-databind-2.1.4.jar,
+ .
