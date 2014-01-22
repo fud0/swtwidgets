@@ -213,12 +213,17 @@ GMapsMap.prototype.bounceMarker=function(markerIdx){
 	for (var i = 0; i < $this.mapMarkers.length; i++) {
 		if(markerIdx == i) {
 			$this.mapMarkers[i].setAnimation(google.maps.Animation.BOUNCE);
-			setTimeout(function () {$this.mapMarkers[i].setAnimation(null);}, 3000);
+			$this.stopMarkerAnimation($this.mapMarkers[i],3000);
 		}
 		else {
 			$this.mapMarkers[i].setAnimation(null);
 		}
 	}	
+};
+
+// Stops any animation on the specified marker after a timeout
+GMapsMap.prototype.stopMarkerAnimation=function(marker,delay){
+	setTimeout(function(){marker.setAnimation(null);}, delay);
 };
 
 // Removes from the map the marker specified by the indexing position
