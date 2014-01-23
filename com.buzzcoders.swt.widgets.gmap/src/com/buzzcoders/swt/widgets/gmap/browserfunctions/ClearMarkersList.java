@@ -16,7 +16,6 @@ import org.eclipse.swt.browser.Browser;
 
 import com.buzzcoders.swt.widgets.gmap.support.GoogleMapSupport;
 
-
 /**
  * Browser function invoked when the list of markers is supposed to be deleted.
  * 

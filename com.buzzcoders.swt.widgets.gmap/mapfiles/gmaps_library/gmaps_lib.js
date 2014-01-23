@@ -279,6 +279,14 @@ GMapsMap.prototype.setCenter=function(lat,lng){
 	this.map.setCenter(lat,lng);
 };
 
+GMapsMap.prototype.setMapType=function(mapType){
+	this.map.setMapTypeId(mapType);
+};
+
+GMapsMap.prototype.getMapType=function(){
+	return this.map.getMapTypeId();
+};
+
 GMapsMap.prototype.panTo=function(latLng){
 	this.map.panTo(latLng);
 };

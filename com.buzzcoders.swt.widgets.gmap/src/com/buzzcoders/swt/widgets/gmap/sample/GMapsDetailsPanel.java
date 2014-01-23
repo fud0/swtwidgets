@@ -48,6 +48,7 @@ import com.buzzcoders.swt.widgets.gmap.browserfunctions.UpdateMapCenter;
 import com.buzzcoders.swt.widgets.gmap.browserfunctions.UpdateMarkerPosition;
 import com.buzzcoders.swt.widgets.gmap.browserfunctions.UpdateZoomLevel;
 import com.buzzcoders.swt.widgets.gmap.core.LatLng;
+import com.buzzcoders.swt.widgets.gmap.core.MapType;
 import com.buzzcoders.swt.widgets.gmap.core.Marker;
 import com.buzzcoders.swt.widgets.gmap.support.GoogleMapSupport;
 import com.fasterxml.jackson.core.JsonParser;
@@ -306,6 +307,17 @@ public class GMapsDetailsPanel implements GoogleMapSupport {
 	@Override
 	public Browser getBrowserControl() {
 		return mapControl;
+	}
+
+	@Override
+	public void setMapType(MapType mapType) {
+		GMapsDetailsPanel.this.mapControl.evaluate("myMap.setMapType("+mapType.getGoogleConstant()+");");
+	}
+
+	@Override
+	public MapType getMapType() {
+		return MapType.fromStringID(
+				(String) GMapsDetailsPanel.this.mapControl.evaluate("return myMap.getMapType();"));
 	}
 
 }

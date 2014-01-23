@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.swt.browser.Browser;
 
 import com.buzzcoders.swt.widgets.gmap.core.LatLng;
+import com.buzzcoders.swt.widgets.gmap.core.MapType;
 import com.buzzcoders.swt.widgets.gmap.core.Marker;
 
 /**
@@ -53,6 +54,10 @@ public interface GoogleMapSupport {
 	void highlightMarker(int markerIdx);
 
 	Browser getBrowserControl();
+	
+	void setMapType(MapType mapType);
+	
+	MapType getMapType();
 
 	// TODO - Add more???
 }
