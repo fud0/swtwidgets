@@ -19,10 +19,6 @@
 	    mapOptions.center = new google.maps.LatLng(45.439722, 12.331944); // Venice
 	    mapOptions.mapTypeId = google.maps.MapTypeId.HYBRID;
 	    myMap = new GMapsMap(document.getElementById('map_container'), mapOptions);
-	    
-	    google.maps.event.addListener( myMap.map, 'maptypeid_changed', function() { 
-    		alert(myMap.map.getMapTypeId());
-		} );
 	
 	    // update initial information
 	    if (IS_JAVA_SUPPORTED) javaCall_UpdateZoomLevel(myMap.getZoom());
