@@ -1,4 +1,5 @@
-swtwidgets
+YASW Library
 ==========
 
-This repository contains a set of SWT widgets that may used in projects involving the Eclipse platform.
+YASW library is a set of SWT widgets that can be re-used when creating Eclipse-based plug-ins and applications.
+YASW is the acronym for Yet Another Swt Widget(s).
