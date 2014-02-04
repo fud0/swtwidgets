@@ -17,6 +17,12 @@ import org.eclipse.swt.browser.BrowserFunction;
 
 import com.buzzcoders.swt.widgets.gmap.support.GoogleMapSupport;
 
+/**
+ * A browser function that maintains a reference to the google map support component.
+ * 
+ * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
+ *
+ */
 public abstract class GMapEnabledFunction extends BrowserFunction {
 
 	private GoogleMapSupport mapSupport;

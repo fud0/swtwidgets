@@ -16,6 +16,12 @@ import org.eclipse.swt.browser.Browser;
 
 import com.buzzcoders.swt.widgets.gmap.support.GoogleMapSupport;
 
+/**
+ * A simple function to test the Java and Javascript bidirectional communication.
+ * 
+ * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
+ *
+ */
 public class TestJavaCallSupport extends GMapEnabledFunction {
 
 	public TestJavaCallSupport(Browser browser, String name, GoogleMapSupport mapSupport) {

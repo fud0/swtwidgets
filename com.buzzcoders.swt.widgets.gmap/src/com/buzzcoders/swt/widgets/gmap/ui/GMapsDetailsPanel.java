@@ -10,7 +10,7 @@
  * Contributors:
  *     Massimo Rabbi <mrabbi@users.sourceforge.net> - initial API and implementation
  *****************************************************************************************/
-package com.buzzcoders.swt.widgets.gmap.sample;
+package com.buzzcoders.swt.widgets.gmap.ui;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;

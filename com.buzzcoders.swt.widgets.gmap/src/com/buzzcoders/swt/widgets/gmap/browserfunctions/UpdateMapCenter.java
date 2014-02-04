@@ -18,6 +18,12 @@ import com.buzzcoders.swt.widgets.gmap.core.LatLng;
 import com.buzzcoders.swt.widgets.gmap.support.GMapUtils;
 import com.buzzcoders.swt.widgets.gmap.support.GoogleMapSupport;
 
+/**
+ * Browser function invoked when the map center is updated.
+ * 
+ * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
+ *
+ */
 public class UpdateMapCenter extends GMapEnabledFunction {
 
 	public UpdateMapCenter(Browser browser, String name,

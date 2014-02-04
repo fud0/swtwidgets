@@ -16,6 +16,12 @@ import org.eclipse.swt.browser.Browser;
 
 import com.buzzcoders.swt.widgets.gmap.support.GoogleMapSupport;
 
+/**
+ * Browser function invoked when the zoom level is updated.
+ * 
+ * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
+ *
+ */
 public class UpdateZoomLevel extends GMapEnabledFunction {
 
 	public UpdateZoomLevel(Browser browser, String name,
