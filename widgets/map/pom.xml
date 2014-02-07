@@ -15,10 +15,10 @@
 
 	<modules>
 		<module>com.buzzcoders.yasw.widgets.map</module>
+		<module>com.buzzcoders.yasw.widgets.map.feature</module>
 		<!--
 		TODO 
 		<module>com.buzzcoders.yasw.widgets.map.example</module>
-		<module>com.buzzcoders.yasw.widgets.map.feature</module>
 		<module>com.buzzcoders.yasw.widgets.map.tests</module>
 		-->
 	</modules>

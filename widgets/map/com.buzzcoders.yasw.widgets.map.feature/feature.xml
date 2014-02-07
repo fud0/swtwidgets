@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.buzzcoders.yasw.widgets.map.feature"
+      label="YASW Map widget"
+      version="1.0.0.qualifier"
+      provider-name="Buzzcoders.com">
+
+   <description url="https://github.com/fud0/yasw-library">
+      The YASW Map widget.
+   </description>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <plugin
+         id="com.buzzcoders.yasw.widgets.map"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
