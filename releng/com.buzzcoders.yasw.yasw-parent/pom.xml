@@ -19,9 +19,9 @@
 
 	<repositories>
 		<repository>
-			<id>jss382TargetPlaftorm</id>
+			<id>localTargetPlatform</id>
 			<layout>p2</layout>
-			<url>file:///Users/mrabbi/Sviluppo/jaspersoftstudio/updatesite/jss382target</url>
+			<url>file://${targetplatform.repo}</url>
 		</repository>
 		<!-- 
 		<repository>
