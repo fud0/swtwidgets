@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/com.buzzcoders.yasw.widgets.map.feature_1.0.0.qualifier.jar" id="com.buzzcoders.yasw.widgets.map.feature" version="1.0.0.qualifier">
+      <category name="YASW Library Individual Widgets"/>
+   </feature>
+   <feature url="features/com.buzzcoders.yasw.feature_1.0.0.qualifier.jar" id="com.buzzcoders.yasw.feature" version="1.0.0.qualifier">
+      <category name="YASW Library All Widgets"/>
+   </feature>
+   <category-def name="YASW Library Individual Widgets" label="YASW Library Individual Widgets"/>
+   <category-def name="YASW Library All Widgets" label="YASW Library All Widgets"/>
+</site>
