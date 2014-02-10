@@ -32,5 +32,7 @@
 			- yasw update site
 			- yasw examples feature
 		-->
+		<module>../com.buzzcoders.yasw.feature</module>
+		<module>../com.buzzcoders.yasw.updatesite</module>
 	</modules>
 </project>
