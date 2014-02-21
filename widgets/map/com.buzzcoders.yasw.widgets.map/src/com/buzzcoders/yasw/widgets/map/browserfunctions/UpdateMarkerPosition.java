@@ -16,7 +16,7 @@ import org.eclipse.swt.browser.Browser;
 
 import com.buzzcoders.yasw.widgets.map.core.LatLng;
 import com.buzzcoders.yasw.widgets.map.support.GMapUtils;
-import com.buzzcoders.yasw.widgets.map.support.GoogleMapSupport;
+import com.buzzcoders.yasw.widgets.map.support.JavaMapSupport;
 
 /**
  * Browser function invoked when a marker on the map gets a newer position (i.e: while being moved).
@@ -27,7 +27,7 @@ import com.buzzcoders.yasw.widgets.map.support.GoogleMapSupport;
 public class UpdateMarkerPosition extends GMapEnabledFunction {
 
     public UpdateMarkerPosition(Browser browser, String name,
-			GoogleMapSupport mapSupport) {
+    		JavaMapSupport mapSupport) {
 		super(browser, name, mapSupport);
 	}
 

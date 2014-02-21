@@ -16,7 +16,7 @@ import org.eclipse.swt.browser.Browser;
 
 import com.buzzcoders.yasw.widgets.map.core.Marker;
 import com.buzzcoders.yasw.widgets.map.support.GMapUtils;
-import com.buzzcoders.yasw.widgets.map.support.GoogleMapSupport;
+import com.buzzcoders.yasw.widgets.map.support.JavaMapSupport;
 
 /**
  * Browser function invoked when a new marker is added on the map.
@@ -26,7 +26,7 @@ import com.buzzcoders.yasw.widgets.map.support.GoogleMapSupport;
  */
 public class AddNewMarker extends GMapEnabledFunction {
 	
-    public AddNewMarker (Browser browser, String name, GoogleMapSupport mapSupport) {
+    public AddNewMarker (Browser browser, String name, JavaMapSupport mapSupport) {
         super (browser, name, mapSupport);
     }
     

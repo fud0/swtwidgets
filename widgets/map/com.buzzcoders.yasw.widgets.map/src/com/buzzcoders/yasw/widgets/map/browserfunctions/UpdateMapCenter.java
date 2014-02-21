@@ -16,7 +16,7 @@ import org.eclipse.swt.browser.Browser;
 
 import com.buzzcoders.yasw.widgets.map.core.LatLng;
 import com.buzzcoders.yasw.widgets.map.support.GMapUtils;
-import com.buzzcoders.yasw.widgets.map.support.GoogleMapSupport;
+import com.buzzcoders.yasw.widgets.map.support.JavaMapSupport;
 
 /**
  * Browser function invoked when the map center is updated.
@@ -27,7 +27,7 @@ import com.buzzcoders.yasw.widgets.map.support.GoogleMapSupport;
 public class UpdateMapCenter extends GMapEnabledFunction {
 
 	public UpdateMapCenter(Browser browser, String name,
-			GoogleMapSupport mapSupport) {
+			JavaMapSupport mapSupport) {
 		super(browser, name, mapSupport);
 	}
 

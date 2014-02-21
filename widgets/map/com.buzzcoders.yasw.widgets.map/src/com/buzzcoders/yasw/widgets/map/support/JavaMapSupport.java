@@ -10,28 +10,14 @@
  * Contributors:
  *     Massimo Rabbi <mrabbi@users.sourceforge.net> - initial API and implementation
  *****************************************************************************************/
-package com.buzzcoders.yasw.widgets.map.browserfunctions;
-
-import org.eclipse.swt.browser.Browser;
-
-import com.buzzcoders.yasw.widgets.map.support.JavaMapSupport;
+package com.buzzcoders.yasw.widgets.map.support;
 
 /**
- * A simple function to test the Java and Javascript bidirectional communication.
+ * This interface should be implemented by clients who wants to provide the
+ * facilities to interact with the map component on the Java side.
  * 
  * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
- *
  */
-public class TestJavaCallSupport extends GMapEnabledFunction {
-
-	public TestJavaCallSupport(Browser browser, String name, JavaMapSupport mapSupport) {
-		super(browser, name, mapSupport);
-	}
-	
-	@Override
-	public Object function(Object[] arguments) {
-		getMapSupport().getBrowserControl().evaluate("alert('Test message: Java<->Javascript communitcation supported'");
-		return null;
-	}
+public interface JavaMapSupport extends MapSupport {
 
 }

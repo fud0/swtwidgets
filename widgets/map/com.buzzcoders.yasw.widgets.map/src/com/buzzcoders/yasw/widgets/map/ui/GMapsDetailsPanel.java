@@ -13,7 +13,6 @@
 package com.buzzcoders.yasw.widgets.map.ui;
 
 import java.net.URLEncoder;
-import java.util.ArrayList;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -48,9 +47,11 @@ import com.buzzcoders.yasw.widgets.map.browserfunctions.UpdateMapCenter;
 import com.buzzcoders.yasw.widgets.map.browserfunctions.UpdateMarkerPosition;
 import com.buzzcoders.yasw.widgets.map.browserfunctions.UpdateZoomLevel;
 import com.buzzcoders.yasw.widgets.map.core.LatLng;
-import com.buzzcoders.yasw.widgets.map.core.MapType;
 import com.buzzcoders.yasw.widgets.map.core.Marker;
-import com.buzzcoders.yasw.widgets.map.support.GoogleMapSupport;
+import com.buzzcoders.yasw.widgets.map.support.BaseJSMapSupport;
+import com.buzzcoders.yasw.widgets.map.support.BaseJavaMapSupport;
+import com.buzzcoders.yasw.widgets.map.support.JSMapSupport;
+import com.buzzcoders.yasw.widgets.map.support.JavaMapSupport;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,10 +67,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 
  * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
  */
-public class GMapsDetailsPanel implements GoogleMapSupport {
+public class GMapsDetailsPanel {
 
 	// Fields
-	private java.util.List<Marker> markers;
+	private JavaMapSupport javaMapSupport;
+	private JSMapSupport jsMapSupport;
 	
 	// SWT widgets
 	private Browser mapControl;
@@ -118,7 +120,7 @@ public class GMapsDetailsPanel implements GoogleMapSupport {
 		mapCenterCoordinatesLbl.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,false));
 		
 		Label addressLocationLbl = new Label(containerCmp, SWT.NONE);
-		addressLocationLbl.setText("Look for an ddress:");
+		addressLocationLbl.setText("Look for an address:");
 		
 	    Group searchGrp = new Group(containerCmp,SWT.BORDER);
 	    searchGrp.setLayout(new GridLayout(2,false));
@@ -149,8 +151,8 @@ public class GMapsDetailsPanel implements GoogleMapSupport {
 						JsonNode location = jsonRoot.path("results").get(0).path("geometry").path("location");
 						JsonNode lat = location.get("lat");
 						JsonNode lng = location.get("lng");
-						GMapsDetailsPanel.this.mapControl.evaluate("myMap.panTo(new google.maps.LatLng("+lat.asText()+","+lng.asText()+"));");
-						GMapsDetailsPanel.this.mapControl.evaluate("myMap.addMarker(new google.maps.LatLng("+lat.asText()+","+lng.asText()+"));");
+						jsMapSupport.evaluateJavascript("myMap.panTo(new google.maps.LatLng("+lat.asText()+","+lng.asText()+"));");
+						jsMapSupport.evaluateJavascript("myMap.addMarker(new google.maps.LatLng("+lat.asText()+","+lng.asText()+"));");
 	    			}
 	    			locateAddressGET.releaseConnection();
 	    			client.getState().clear();
@@ -172,8 +174,8 @@ public class GMapsDetailsPanel implements GoogleMapSupport {
 	    mapZoom.addSelectionListener(new SelectionAdapter() {
 	    	@Override
 	    	public void widgetSelected(SelectionEvent e) {
-	    		GMapsDetailsPanel.this.mapControl.evaluate("JAVA_TO_JAVASCRIPT_CALLED=true");
-	    		GMapsDetailsPanel.this.mapControl.evaluate("myMap.setZoom("+mapZoom.getSelection()+");");
+	    		jsMapSupport.evaluateJavascript("JAVA_TO_JAVASCRIPT_CALLED=true");
+	    		jsMapSupport.setZoomLevel(mapZoom.getSelection());
 	    		zoomLevelLbl.setText("Zoom: " + mapZoom.getSelection());
 	    	}
 		});
@@ -189,14 +191,14 @@ public class GMapsDetailsPanel implements GoogleMapSupport {
 	    b.setText("Delete markers");
 	    b.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
-	        	GMapsDetailsPanel.this.mapControl.evaluate("myMap.clearAllMarkers();");
+	        	jsMapSupport.clearMarkers();
 	        }
 	    });
 	    markersList.addSelectionListener(new SelectionAdapter() {
 	    	@Override
 	    	public void widgetSelected(SelectionEvent e) {
 	    		int markerIdx = markersList.getSelectionIndex();
-	    		GMapsDetailsPanel.this.mapControl.evaluate("myMap.bounceMarker("+markerIdx+");");
+	    		jsMapSupport.highlightMarker(markerIdx);
 	    	}
 		});
 	    markersList.addKeyListener(new KeyAdapter() {
@@ -204,120 +206,95 @@ public class GMapsDetailsPanel implements GoogleMapSupport {
 	    	public void keyPressed(KeyEvent e) {
 	    		if(e.keyCode == SWT.DEL) {
 	    			int markerIdx = markersList.getSelectionIndex();
-					RemoveMarker.removeMarker(markerIdx, GMapsDetailsPanel.this);
-					GMapsDetailsPanel.this.mapControl.evaluate("JAVA_TO_JAVASCRIPT_CALLED=true");
-					GMapsDetailsPanel.this.mapControl.evaluate("myMap.removeMarkerByIndex("+markerIdx+");");
+					RemoveMarker.removeMarker(markerIdx, javaMapSupport);
+					jsMapSupport.evaluateJavascript("JAVA_TO_JAVASCRIPT_CALLED=true");
+					jsMapSupport.removeMarker(markerIdx);
 	    		}
 	    	}
 		});
 
 	    sash.setWeights(new int[] {4,1});
+	    
+	    jsMapSupport = new BaseJSMapSupport(mapControl);
+	    javaMapSupport = new DetailsPanelMapSupport(mapControl);
 
 	    // Add the functions for Java <-> Javascript communication to the browser instance
-	    new AddNewMarker(mapControl, MapWidgetConstants.BROWSER_FUNCTION_ADD_MARKER, this);
-	    new ClearMarkersList(mapControl, MapWidgetConstants.BROWSER_FUNCTION_CLEAR_MARKERS, this);
-	    new RemoveMarker(mapControl, MapWidgetConstants.BROWSER_FUNCTION_REMOVE_MARKER, this);
-	    new UpdateMarkerPosition(mapControl, MapWidgetConstants.BROWSER_FUCTION_UPDATE_MARKER_POSITION, this);
-	    new UpdateZoomLevel(mapControl, MapWidgetConstants.BROWSER_FUNCTION_UPDATE_ZOOM_LEVEL, this);
-	    new UpdateMapCenter(mapControl, MapWidgetConstants.BROWSER_FUNCTION_UPDATE_MAP_CENTER, this);
-	    new TestJavaCallSupport(mapControl, MapWidgetConstants.BROWSER_FUNCTION_TEST_JAVACALL_SUPPORT, this);
+	    new AddNewMarker(mapControl, MapWidgetConstants.BROWSER_FUNCTION_ADD_MARKER, javaMapSupport);
+	    new ClearMarkersList(mapControl, MapWidgetConstants.BROWSER_FUNCTION_CLEAR_MARKERS, javaMapSupport);
+	    new RemoveMarker(mapControl, MapWidgetConstants.BROWSER_FUNCTION_REMOVE_MARKER, javaMapSupport);
+	    new UpdateMarkerPosition(mapControl, MapWidgetConstants.BROWSER_FUCTION_UPDATE_MARKER_POSITION, javaMapSupport);
+	    new UpdateZoomLevel(mapControl, MapWidgetConstants.BROWSER_FUNCTION_UPDATE_ZOOM_LEVEL, javaMapSupport);
+	    new UpdateMapCenter(mapControl, MapWidgetConstants.BROWSER_FUNCTION_UPDATE_MAP_CENTER, javaMapSupport);
+	    new TestJavaCallSupport(mapControl, MapWidgetConstants.BROWSER_FUNCTION_TEST_JAVACALL_SUPPORT, javaMapSupport);
 	    
 	    mapControl.setUrl(MapActivator.getFileLocation("mapfiles/gmaps_library/map.html"));
 	}
 
-	@Override
-	public LatLng getMapCenter() {
-		return new LatLng(
-				(Double) GMapsDetailsPanel.this.mapControl.evaluate("return myMap.getCenter().lat()"), 
-				(Double) GMapsDetailsPanel.this.mapControl.evaluate("return myMap.getCenter().lng()"));
-	}
+	class DetailsPanelMapSupport extends BaseJavaMapSupport{
 
-	@Override
-	public void setMapCenter(LatLng position) {
-		mapCenterCoordinatesLbl.setText("<"+position.getLat()+" , " + position.getLng() + ">");
-	}
-
-	@Override
-	public int getZoomLevel() {
-		return mapZoom.getSelection();
-	}
-
-	@Override
-	public void setZoomLevel(int newZoomLevel) {
-		mapZoom.setSelection(newZoomLevel);
-		zoomLevelLbl.setText("Zoom: " + newZoomLevel);
-	}
-
-	@Override
-	public void addNewMarker(Marker newMarker) {
-		getMarkers().add(newMarker);
-		LatLng position = newMarker.getPosition();
-		markersList.add(position.getLat() + " : " + position.getLng());
-	}
-
-	@Override
-	public void removeMarker(Marker oldMarker) {
-		int mIdx = getMarkers().indexOf(oldMarker);
-		if(mIdx>0){
-			getMarkers().remove(mIdx);
-			markersList.remove(mIdx);
+		DetailsPanelMapSupport(Browser browser) {
+			super(browser);
 		}
-		else {
-			// FIXME do nothing or raise error (at least log)?!
+		
+		@Override
+		public void removeMarker(int markerIndex) {
+			super.removeMarker(markerIndex);
+			markersList.remove(markerIndex);
+		}
+		
+		@Override
+		public void highlightMarker(int markerIdx) {
+			super.highlightMarker(markerIdx);
+			markersList.setSelection(markerIdx);
+		}
+		
+		@Override
+		public void updateMarkerPosition(int markerIdx, LatLng newPosition) {
+			super.updateMarkerPosition(markerIdx, newPosition);
+			markersList.setItem(markerIdx, newPosition.getLat() + " : " + newPosition.getLng());
+		}
+		
+		@Override
+		public void clearMarkers() {
+			super.clearMarkers();
+			markersList.removeAll();
+		}
+		
+		@Override
+		public void removeMarker(Marker oldMarker) {
+			int mIdx = getMarkers().indexOf(oldMarker);
+			if(mIdx>0){
+				getMarkers().remove(mIdx);
+				markersList.remove(mIdx);
+			}
+			else {
+				// FIXME do nothing or raise error (at least log)?!
+			}
+		}
+		
+		@Override
+		public void addNewMarker(Marker newMarker) {
+			super.addNewMarker(newMarker);
+			LatLng position = newMarker.getPosition();
+			markersList.add(position.getLat() + " : " + position.getLng());
+		}
+		
+		@Override
+		public void setZoomLevel(int newZoomLevel) {
+			super.setZoomLevel(newZoomLevel);
+			mapZoom.setSelection(newZoomLevel);
+			zoomLevelLbl.setText("Zoom: " + newZoomLevel);
+		}
+		
+		@Override
+		public int getZoomLevel() {
+			return mapZoom.getSelection();
+		}
+		
+		@Override
+		public void setMapCenter(LatLng position) {
+			super.setMapCenter(position);
+			mapCenterCoordinatesLbl.setText("<"+position.getLat()+" , " + position.getLng() + ">");
 		}
 	}
-
-	@Override
-	public void clearMarkers() {
-		getMarkers().clear();
-		markersList.removeAll();
-	}
-
-	@Override
-	public java.util.List<Marker> getMarkers() {
-		if(markers==null){
-			markers = new ArrayList<Marker>();
-		}
-		return markers;
-	}
-
-	@Override
-	public void updateMarkerPosition(int markerIdx, LatLng newPosition) {
-		Marker marker = getMarkers().get(markerIdx);
-		marker.setPosition(newPosition);
-		markersList.setItem(markerIdx, newPosition.getLat() + " : " + newPosition.getLng());
-	}
-
-	@Override
-	public void highlightMarker(int markerIdx) {
-		markersList.setSelection(markerIdx);
-	}
-
-	@Override
-	public void removeMarker(int markerIndex) {
-		getMarkers().remove(markerIndex);
-		markersList.remove(markerIndex);
-	}
-
-	@Override
-	public int getMarkersNum() {
-		return getMarkers().size();
-	}
-
-	@Override
-	public Browser getBrowserControl() {
-		return mapControl;
-	}
-
-	@Override
-	public void setMapType(MapType mapType) {
-		GMapsDetailsPanel.this.mapControl.evaluate("myMap.setMapType("+mapType.getGoogleConstant()+");");
-	}
-
-	@Override
-	public MapType getMapType() {
-		return MapType.fromStringID(
-				(String) GMapsDetailsPanel.this.mapControl.evaluate("return myMap.getMapType();"));
-	}
-
 }

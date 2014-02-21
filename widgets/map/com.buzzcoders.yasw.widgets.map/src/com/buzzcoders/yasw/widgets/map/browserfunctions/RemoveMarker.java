@@ -15,7 +15,8 @@ package com.buzzcoders.yasw.widgets.map.browserfunctions;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.browser.Browser;
 
-import com.buzzcoders.yasw.widgets.map.support.GoogleMapSupport;
+import com.buzzcoders.yasw.widgets.map.support.JavaMapSupport;
+import com.buzzcoders.yasw.widgets.map.support.MapSupport;
 
 /**
  * Browser function invoked when a marker is removed from the map.
@@ -26,7 +27,7 @@ import com.buzzcoders.yasw.widgets.map.support.GoogleMapSupport;
 public class RemoveMarker extends GMapEnabledFunction {
 	
     public RemoveMarker(Browser browser, String name,
-			GoogleMapSupport mapSupport) {
+    		JavaMapSupport mapSupport) {
 		super(browser, name, mapSupport);
 	}
 
@@ -37,9 +38,9 @@ public class RemoveMarker extends GMapEnabledFunction {
         return null;
     }
     
-    public static void removeMarker(int markerIndex, GoogleMapSupport googleMapSupport) {
-    	Assert.isNotNull(googleMapSupport);
-    	Assert.isTrue(markerIndex>=0 && markerIndex<googleMapSupport.getMarkersNum());
-    	googleMapSupport.removeMarker(markerIndex);
+    public static void removeMarker(int markerIndex, MapSupport mapSupport) {
+    	Assert.isNotNull(mapSupport);
+    	Assert.isTrue(markerIndex>=0 && markerIndex<mapSupport.getMarkersNum());
+    	mapSupport.removeMarker(markerIndex);
     }
 }

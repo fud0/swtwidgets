@@ -14,7 +14,7 @@ package com.buzzcoders.yasw.widgets.map.browserfunctions;
 
 import org.eclipse.swt.browser.Browser;
 
-import com.buzzcoders.yasw.widgets.map.support.GoogleMapSupport;
+import com.buzzcoders.yasw.widgets.map.support.JavaMapSupport;
 
 /**
  * Browser function invoked when the zoom level is updated.
@@ -25,7 +25,7 @@ import com.buzzcoders.yasw.widgets.map.support.GoogleMapSupport;
 public class UpdateZoomLevel extends GMapEnabledFunction {
 
 	public UpdateZoomLevel(Browser browser, String name,
-			GoogleMapSupport mapSupport) {
+			JavaMapSupport mapSupport) {
 		super(browser, name, mapSupport);
 	}
 

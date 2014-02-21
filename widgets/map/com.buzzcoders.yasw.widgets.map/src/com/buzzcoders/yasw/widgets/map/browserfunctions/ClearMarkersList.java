@@ -14,7 +14,7 @@ package com.buzzcoders.yasw.widgets.map.browserfunctions;
 
 import org.eclipse.swt.browser.Browser;
 
-import com.buzzcoders.yasw.widgets.map.support.GoogleMapSupport;
+import com.buzzcoders.yasw.widgets.map.support.JavaMapSupport;
 
 /**
  * Browser function invoked when the list of markers is supposed to be deleted.
@@ -25,7 +25,7 @@ import com.buzzcoders.yasw.widgets.map.support.GoogleMapSupport;
 public class ClearMarkersList extends GMapEnabledFunction {
 	
 	public ClearMarkersList(Browser browser, String name,
-			GoogleMapSupport mapSupport) {
+			JavaMapSupport mapSupport) {
 		super(browser, name, mapSupport);
 	}
 

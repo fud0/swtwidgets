@@ -15,24 +15,26 @@ package com.buzzcoders.yasw.widgets.map.browserfunctions;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 
-import com.buzzcoders.yasw.widgets.map.support.GoogleMapSupport;
+import com.buzzcoders.yasw.widgets.map.support.JavaMapSupport;
 
 /**
- * A browser function that maintains a reference to the google map support component.
+ * A browser function that maintains a reference to the map support
+ * component (Java based). This because request coming from Javascript
+ * invocation should reflect on Java components, most of the times UI ones.
  * 
  * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
- *
+ * 
  */
 public abstract class GMapEnabledFunction extends BrowserFunction {
 
-	private GoogleMapSupport mapSupport;
+	private JavaMapSupport mapSupport;
 	
-	public GMapEnabledFunction(Browser browser, String name, GoogleMapSupport mapSupport) {
+	public GMapEnabledFunction(Browser browser, String name, JavaMapSupport mapSupport) {
 		super(browser, name);
 		this.mapSupport = mapSupport;
 	}
 	
-	public GoogleMapSupport getMapSupport() {
+	public JavaMapSupport getMapSupport() {
 		return mapSupport;
 	}
 }
