@@ -12,11 +12,7 @@
  *****************************************************************************************/
 package com.buzzcoders.yasw.widgets.map.ui;
 
-import java.net.URLEncoder;
-
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.GetMethod;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
@@ -36,6 +32,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 
 import com.buzzcoders.yasw.widgets.map.MapActivator;
 import com.buzzcoders.yasw.widgets.map.MapWidgetConstants;
@@ -50,11 +47,9 @@ import com.buzzcoders.yasw.widgets.map.core.LatLng;
 import com.buzzcoders.yasw.widgets.map.core.Marker;
 import com.buzzcoders.yasw.widgets.map.support.BaseJSMapSupport;
 import com.buzzcoders.yasw.widgets.map.support.BaseJavaMapSupport;
+import com.buzzcoders.yasw.widgets.map.support.GMapUtils;
 import com.buzzcoders.yasw.widgets.map.support.JSMapSupport;
 import com.buzzcoders.yasw.widgets.map.support.JavaMapSupport;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * This class implements the support for the Google Map component. The panel
@@ -135,30 +130,16 @@ public class GMapsDetailsPanel {
 	    goToBtn.addSelectionListener(new SelectionAdapter() {
 	    	@Override
 	    	public void widgetSelected(SelectionEvent e) {
-	    		try {
-	    			String addressUrlEncoded = URLEncoder.encode(addressLocation.getText(), "UTF-8");
-	    			String locationFindURL = "http://maps.google.com/maps/api/geocode/json?sensor=false&address="+addressUrlEncoded;
-	    			HttpClient client = new HttpClient();
-	    			GetMethod locateAddressGET = new GetMethod(locationFindURL);
-	    			int httpRetCode = client.executeMethod(locateAddressGET);
-	    			if(httpRetCode == HttpStatus.SC_OK){
-		    			String responseBodyAsString = locateAddressGET.getResponseBodyAsString();
-						ObjectMapper mapper = new ObjectMapper();
-						mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-						mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-						mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
-						JsonNode jsonRoot = mapper.readTree(responseBodyAsString);
-						JsonNode location = jsonRoot.path("results").get(0).path("geometry").path("location");
-						JsonNode lat = location.get("lat");
-						JsonNode lng = location.get("lng");
-						jsMapSupport.evaluateJavascript("myMap.panTo(new google.maps.LatLng("+lat.asText()+","+lng.asText()+"));");
-						jsMapSupport.evaluateJavascript("myMap.addMarker(new google.maps.LatLng("+lat.asText()+","+lng.asText()+"));");
-	    			}
-	    			locateAddressGET.releaseConnection();
-	    			client.getState().clear();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}    		
+	    		LatLng coords = GMapUtils.getAddressCoordinates(addressLocation.getText());
+	    		if(coords!=null) {
+					jsMapSupport.evaluateJavascript("myMap.panTo(new google.maps.LatLng("+coords.getLat()+","+coords.getLng()+"));");
+					jsMapSupport.evaluateJavascript("myMap.addMarker(new google.maps.LatLng("+coords.getLat()+","+coords.getLng()+"));");
+	    		}
+	    		else {
+	    			MessageDialog.openError(
+	    					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+	    					"Geo-location error", "Unable to locate the specified address. Please verify it is correct.");
+	    		}
 	    	}
 		});
 	    

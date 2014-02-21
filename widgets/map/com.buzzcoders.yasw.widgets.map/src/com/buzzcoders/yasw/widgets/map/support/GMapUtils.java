@@ -12,6 +12,11 @@
  *****************************************************************************************/
 package com.buzzcoders.yasw.widgets.map.support;
 
+import java.net.URLEncoder;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
@@ -21,6 +26,9 @@ import com.buzzcoders.yasw.widgets.map.core.Animation;
 import com.buzzcoders.yasw.widgets.map.core.LatLng;
 import com.buzzcoders.yasw.widgets.map.core.MarkerOptions;
 import com.buzzcoders.yasw.widgets.map.ui.GMapsDetailsPanel;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class GMapUtils {
 	
@@ -66,6 +74,37 @@ public class GMapUtils {
 			}
 		}
 		return null;
+	}
+
+	public static LatLng getAddressCoordinates(String addressText) {
+		LatLng coordinates = null;
+		GetMethod locateAddressGET = null;
+		HttpClient client = null;
+		try {
+			String addressUrlEncoded = URLEncoder.encode(addressText, "UTF-8");
+			String locationFindURL = "http://maps.google.com/maps/api/geocode/json?sensor=false&address="+addressUrlEncoded;
+			client = new HttpClient();
+			locateAddressGET = new GetMethod(locationFindURL);
+			int httpRetCode = client.executeMethod(locateAddressGET);
+			if(httpRetCode == HttpStatus.SC_OK){
+    			String responseBodyAsString = locateAddressGET.getResponseBodyAsString();
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+				mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+				mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+				JsonNode jsonRoot = mapper.readTree(responseBodyAsString);
+				JsonNode location = jsonRoot.path("results").get(0).path("geometry").path("location");
+				JsonNode lat = location.get("lat");
+				JsonNode lng = location.get("lng");
+				coordinates = new LatLng(lat.asDouble(),lng.asDouble());
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			if(locateAddressGET!=null) locateAddressGET.releaseConnection();
+			if(client!=null) client.getState().clear();
+		}
+		return coordinates;
 	}
 
 	/**
