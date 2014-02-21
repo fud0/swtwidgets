@@ -21,10 +21,10 @@ package com.buzzcoders.yasw.widgets.map.core;
  *
  */
 public enum MapType {
-	HYBRID("hybrid","google.maps.MapTypeId.HYBRID"),
 	ROADMAP("roadmap","google.maps.MapTypeId.ROADMAP"),
 	SATELLITE("satellite","google.maps.MapTypeId.SATELLITE"),
-	TERRAIN("terrain","google.maps.MapTypeId.TERRAIN");
+	TERRAIN("terrain","google.maps.MapTypeId.TERRAIN"),
+	HYBRID("hybrid","google.maps.MapTypeId.HYBRID");
 	
 	private String stringID;
 	private String googleConstant;
