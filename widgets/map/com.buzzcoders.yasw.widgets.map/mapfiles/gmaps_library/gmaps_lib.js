@@ -166,14 +166,24 @@ function GMapsMap(mapDIV,mapOptions) {
 	var $this=this;
 	google.maps.event.addListener($this.map, 'zoom_changed', function() {
 		if(!JAVA_TO_JAVASCRIPT_CALLED) {
-	    	if(IS_JAVA_SUPPORTED) javaCall_UpdateZoomLevel($this.getZoom());
+	    	if(typeof javaCall_UpdateZoomLevel != 'undefined') javaCall_UpdateZoomLevel($this.getZoom());
 	    }
 	    JAVA_TO_JAVASCRIPT_CALLED=false;
 	});
 	
 	google.maps.event.addListener($this.map, 'center_changed', function() {
-    	if(IS_JAVA_SUPPORTED) javaCall_UpdateMapCenter($this.getCenter().lat(),$this.getCenter().lng());
+		if(!JAVA_TO_JAVASCRIPT_CALLED) {
+    		if(typeof javaCall_UpdateMapCenter != 'undefined') javaCall_UpdateMapCenter($this.getCenter().lat(),$this.getCenter().lng());
+    	}
+    	JAVA_TO_JAVASCRIPT_CALLED=false;
   	});	
+
+	google.maps.event.addListener($this.map, 'maptypeid_changed', function() {
+		if(!JAVA_TO_JAVASCRIPT_CALLED) {
+    		if(typeof javaCall_UpdateMapType != 'undefined') javaCall_UpdateMapType($this.getMapType());
+    	}
+    	JAVA_TO_JAVASCRIPT_CALLED=false;
+  	});	  	
 }
 GMapsMap.prototype.constructor=GMapsMap;
 
@@ -186,7 +196,7 @@ GMapsMap.prototype.addMarker=function(latLng,markerOptions){
 		draggable: markerOptions.draggable || true, animation: markerOptions.animation || google.maps.Animation.DROP});
 	google.maps.event.addListener(marker, 'position_changed', function() {
 		var markerIdx = $this.mapMarkers.indexOf(marker);
-    	if(IS_JAVA_SUPPORTED) javaCall_UpdateMarkerPosition(marker.getPosition().lat(), marker.getPosition().lng(),markerIdx);
+    	if(typeof javaCall_UpdateMarkerPosition != 'undefined') javaCall_UpdateMarkerPosition(marker.getPosition().lat(), marker.getPosition().lng(),markerIdx);
 	});
 	google.maps.event.addListener(marker, 'rightclick', function(mouseEvent){
 		$this.selectedMarker = marker;
@@ -194,7 +204,7 @@ GMapsMap.prototype.addMarker=function(latLng,markerOptions){
 	});
 	$this.mapMarkers.push(marker);
 	
-	if(IS_JAVA_SUPPORTED) javaCall_AddMarker(latLng.lat(), latLng.lng(),true,google.maps.Animation.DROP,true,true);
+	if(typeof javaCall_AddMarker != 'undefined') javaCall_AddMarker(latLng.lat(), latLng.lng(),true,google.maps.Animation.DROP,true,true);
 };
 
 // Clears all the markers from the map
@@ -204,7 +214,7 @@ GMapsMap.prototype.clearAllMarkers=function(){
 	}
 	this.mapMarkers = [];
 	this.selectedMarker = null;
-	if(IS_JAVA_SUPPORTED) javaCall_ClearMarkers();
+	if(typeof javaCall_ClearMarkers != 'undefined') javaCall_ClearMarkers();
 };
 
 // Makes the specified marker bounce
@@ -233,7 +243,7 @@ GMapsMap.prototype.removeMarkerByIndex=function(markerIdx){
 		this.mapMarkers.splice(markerIdx, 1);
 	}
 	if(!JAVA_TO_JAVASCRIPT_CALLED) {
-	   	if(IS_JAVA_SUPPORTED) javaCall_DelMarker(markerIdx);
+	   	if(typeof javaCall_DelMarker != 'undefined') javaCall_DelMarker(markerIdx);
 	}
 	JAVA_TO_JAVASCRIPT_CALLED=false;
 };

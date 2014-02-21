@@ -21,8 +21,9 @@
 	    myMap = new GMapsMap(document.getElementById('map_container'), mapOptions);
 	
 	    // update initial information
-	    if (IS_JAVA_SUPPORTED) javaCall_UpdateZoomLevel(myMap.getZoom());
-	    if (IS_JAVA_SUPPORTED) javaCall_UpdateMapCenter(myMap.getCenter().lat(), myMap.getCenter().lng());
+	    if (typeof javaCall_UpdateZoomLevel != 'undefined') javaCall_UpdateZoomLevel(myMap.getZoom());
+	    if (typeof javaCall_UpdateMapCenter != 'undefined') javaCall_UpdateMapCenter(myMap.getCenter().lat(), myMap.getCenter().lng());
+	    if (typeof javaCall_UpdateMapType != 'undefined') javaCall_UpdateMapType(myMap.getMapType());
 	
 	    //	context menu for the map
 	    var mapMenuItems = [];
