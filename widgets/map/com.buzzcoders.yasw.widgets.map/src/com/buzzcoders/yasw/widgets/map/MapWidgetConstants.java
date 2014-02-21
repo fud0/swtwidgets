@@ -28,5 +28,6 @@ public interface MapWidgetConstants {
 	public static final String BROWSER_FUNCTION_UPDATE_ZOOM_LEVEL = "javaCall_UpdateZoomLevel";
 	public static final String BROWSER_FUNCTION_UPDATE_MAP_CENTER = "javaCall_UpdateMapCenter";
 	public static final String BROWSER_FUNCTION_TEST_JAVACALL_SUPPORT = "javaCall_TestJavaCallSupport";
+	public static final String BROWSER_FUNCTION_UPDATE_MAP_TYPE = "javaCall_UpdateMapType";
 	
 }
