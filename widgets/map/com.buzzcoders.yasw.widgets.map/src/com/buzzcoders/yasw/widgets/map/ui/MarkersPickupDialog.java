@@ -1,0 +1,221 @@
+package com.buzzcoders.yasw.widgets.map.ui;
+
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Shell;
+
+import com.buzzcoders.yasw.widgets.map.MapWidgetConstants;
+import com.buzzcoders.yasw.widgets.map.browserfunctions.AddNewMarker;
+import com.buzzcoders.yasw.widgets.map.browserfunctions.ClearMarkersList;
+import com.buzzcoders.yasw.widgets.map.browserfunctions.GMapEnabledFunction;
+import com.buzzcoders.yasw.widgets.map.browserfunctions.RemoveMarker;
+import com.buzzcoders.yasw.widgets.map.browserfunctions.UpdateMarkerPosition;
+import com.buzzcoders.yasw.widgets.map.core.LatLng;
+import com.buzzcoders.yasw.widgets.map.core.Marker;
+import com.buzzcoders.yasw.widgets.map.support.BaseJavaMapSupport;
+import com.buzzcoders.yasw.widgets.map.support.JavaMapSupport;
+
+public class MarkersPickupDialog extends Dialog {
+	
+	private List markersList;
+	private MapTile map;
+
+	/**
+	 * Create the dialog.
+	 * @param parentShell
+	 */
+	public MarkersPickupDialog(Shell parentShell) {
+		super(parentShell);
+	}
+
+	/**
+	 * Create contents of the dialog.
+	 * @param parent
+	 */
+	@Override
+	protected Control createDialogArea(Composite parent) {
+		Composite container = (Composite) super.createDialogArea(parent);
+		
+		SashForm sash = new SashForm(container, SWT.HORIZONTAL);
+		sash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		map = new MapTile(sash, SWT.BORDER);
+		map.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		map.configureJavaSupport(new PanelJavaMapSupport(map.getMapControl()));
+		map.getFunctions().add(
+				new AddNewMarker(map.getMapControl(),
+						MapWidgetConstants.BROWSER_FUNCTION_ADD_MARKER, map
+								.getJavaMapSupport()));
+		map.getFunctions().add(
+				new ClearMarkersList(map.getMapControl(),
+						MapWidgetConstants.BROWSER_FUNCTION_CLEAR_MARKERS, map
+								.getJavaMapSupport()));
+		map.getFunctions().add(
+				new RemoveMarker(map.getMapControl(),
+						MapWidgetConstants.BROWSER_FUNCTION_REMOVE_MARKER, map
+								.getJavaMapSupport()));
+		map.getFunctions()
+				.add(new UpdateMarkerPosition(
+						map.getMapControl(),
+						MapWidgetConstants.BROWSER_FUCTION_UPDATE_MARKER_POSITION,
+						map.getJavaMapSupport()));
+		map.getFunctions()
+				.add(new InitialConfigurationFunction(
+						map.getMapControl(),
+						MapWidgetConstants.BROWSER_FUNCTION_INITIAL_CONFIGURATION,
+						map.getJavaMapSupport()));
+
+		Composite panelCmp = new Composite(sash, SWT.NONE);
+		GridLayout panelCmpGL = new GridLayout(1,true);
+		panelCmpGL.marginWidth=0;
+		panelCmpGL.marginHeight=0;
+		panelCmp.setLayout(panelCmpGL);
+		panelCmp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+	    
+		Label markersLbl = new Label(panelCmp,SWT.NONE);
+	    markersLbl.setText("Markers");
+	    markersLbl.setLayoutData(new GridData(SWT.TOP, SWT.LEFT, true, false));
+		
+	    markersList = new List(panelCmp, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+	    markersList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+	    Button delMarkersBtn = new Button(panelCmp, SWT.PUSH);
+	    delMarkersBtn.setLayoutData(new GridData(SWT.RIGHT,SWT.BOTTOM,false,false));
+	    delMarkersBtn.setText("Delete markers");
+	    delMarkersBtn.addSelectionListener(new SelectionAdapter() {
+	        public void widgetSelected(SelectionEvent e) {
+	        	map.getJavascriptMapSupport().clearMarkers();
+	        }
+	    });
+	    markersList.addSelectionListener(new SelectionAdapter() {
+	    	@Override
+	    	public void widgetSelected(SelectionEvent e) {
+	    		int markerIdx = markersList.getSelectionIndex();
+	    		map.getJavascriptMapSupport().highlightMarker(markerIdx);
+	    	}
+		});
+	    markersList.addKeyListener(new KeyAdapter() {
+	    	@Override
+	    	public void keyPressed(KeyEvent e) {
+	    		if(e.keyCode == SWT.DEL) {
+	    			int markerIdx = markersList.getSelectionIndex();
+					RemoveMarker.removeMarker(markerIdx, map.getJavaMapSupport());
+					map.getJavascriptMapSupport().evaluateJavascript("JAVA_TO_JAVASCRIPT_CALLED=true");
+					map.getJavascriptMapSupport().removeMarker(markerIdx);
+	    		}
+	    	}
+		});
+
+	    map.activateMapTile();
+ 	    
+		sash.setWeights(new int[] {75,25});
+
+		return container;
+	}
+	
+	/**
+	 * Create contents of the button bar.
+	 * @param parent
+	 */
+	@Override
+	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
+				true);
+		createButton(parent, IDialogConstants.CANCEL_ID,
+				IDialogConstants.CANCEL_LABEL, false);
+	}
+
+	/**
+	 * Return the initial size of the dialog.
+	 */
+	@Override
+	protected Point getInitialSize() {
+		return new Point(800, 600);
+	}
+	
+	@Override
+	protected boolean isResizable() {
+		return true;
+	};
+
+	class InitialConfigurationFunction extends GMapEnabledFunction {
+
+		public InitialConfigurationFunction(Browser browser, String name,
+				JavaMapSupport mapSupport) {
+			super(browser, name, mapSupport);
+		}
+		
+		@Override
+		public Object function(Object[] arguments) {
+			getMapSupport().getBrowserControl().evaluate("MENU_KIND=_MENU_COMPLETE");
+			return null;
+		}
+		
+	}
+	
+	class PanelJavaMapSupport extends BaseJavaMapSupport{
+
+		PanelJavaMapSupport(Browser browser) {
+			super(browser);
+		}
+		
+		@Override
+		public void removeMarker(int markerIndex) {
+			super.removeMarker(markerIndex);
+			markersList.remove(markerIndex);
+		}
+		
+		@Override
+		public void highlightMarker(int markerIdx) {
+			super.highlightMarker(markerIdx);
+			markersList.setSelection(markerIdx);
+		}
+		
+		@Override
+		public void updateMarkerPosition(int markerIdx, LatLng newPosition) {
+			super.updateMarkerPosition(markerIdx, newPosition);
+			markersList.setItem(markerIdx, newPosition.getLat() + " : " + newPosition.getLng());
+		}
+		
+		@Override
+		public void clearMarkers() {
+			super.clearMarkers();
+			markersList.removeAll();
+		}
+		
+		@Override
+		public void removeMarker(Marker oldMarker) {
+			int mIdx = getMarkers().indexOf(oldMarker);
+			if(mIdx>0){
+				getMarkers().remove(mIdx);
+				markersList.remove(mIdx);
+			}
+			else {
+				// FIXME do nothing or raise error (at least log)?!
+			}
+		}
+		
+		@Override
+		public void addNewMarker(Marker newMarker) {
+			super.addNewMarker(newMarker);
+			LatLng position = newMarker.getPosition();
+			markersList.add(
+					String.format("%.6f",position.getLat()) + " : " + String.format("%.6f",position.getLng()));
+		}
+		
+	}
+}

@@ -28,13 +28,19 @@ import com.buzzcoders.yasw.widgets.map.support.JavaMapSupport;
 public abstract class GMapEnabledFunction extends BrowserFunction {
 
 	private JavaMapSupport mapSupport;
+	private String jsName;
 	
 	public GMapEnabledFunction(Browser browser, String name, JavaMapSupport mapSupport) {
 		super(browser, name);
 		this.mapSupport = mapSupport;
+		this.jsName = name;
 	}
 	
 	public JavaMapSupport getMapSupport() {
 		return mapSupport;
+	}
+	
+	public String getJavascriptName(){
+		return jsName;
 	}
 }

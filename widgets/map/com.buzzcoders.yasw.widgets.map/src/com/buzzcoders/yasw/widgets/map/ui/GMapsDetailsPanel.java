@@ -14,11 +14,8 @@ package com.buzzcoders.yasw.widgets.map.ui;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -34,22 +31,15 @@ import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
-import com.buzzcoders.yasw.widgets.map.MapActivator;
 import com.buzzcoders.yasw.widgets.map.MapWidgetConstants;
 import com.buzzcoders.yasw.widgets.map.browserfunctions.AddNewMarker;
 import com.buzzcoders.yasw.widgets.map.browserfunctions.ClearMarkersList;
 import com.buzzcoders.yasw.widgets.map.browserfunctions.RemoveMarker;
-import com.buzzcoders.yasw.widgets.map.browserfunctions.TestJavaCallSupport;
-import com.buzzcoders.yasw.widgets.map.browserfunctions.UpdateMapCenter;
 import com.buzzcoders.yasw.widgets.map.browserfunctions.UpdateMarkerPosition;
-import com.buzzcoders.yasw.widgets.map.browserfunctions.UpdateZoomLevel;
 import com.buzzcoders.yasw.widgets.map.core.LatLng;
 import com.buzzcoders.yasw.widgets.map.core.Marker;
-import com.buzzcoders.yasw.widgets.map.support.BaseJSMapSupport;
 import com.buzzcoders.yasw.widgets.map.support.BaseJavaMapSupport;
 import com.buzzcoders.yasw.widgets.map.support.GMapUtils;
-import com.buzzcoders.yasw.widgets.map.support.JSMapSupport;
-import com.buzzcoders.yasw.widgets.map.support.JavaMapSupport;
 
 /**
  * This class implements the support for the Google Map component. The panel
@@ -64,18 +54,14 @@ import com.buzzcoders.yasw.widgets.map.support.JavaMapSupport;
  */
 public class GMapsDetailsPanel {
 
-	// Fields
-	private JavaMapSupport javaMapSupport;
-	private JSMapSupport jsMapSupport;
-	
 	// SWT widgets
-	private Browser mapControl;
 	private List markersList;
 	private Text addressLocation;
 	private Button goToBtn;
 	private Scale mapZoom;
 	private Label zoomLevelLbl;
 	private Label mapCenterCoordinatesLbl;
+	private MapTile map;
 
 	/**
 	 * Creates a new panel containing the controls to work with a 
@@ -86,23 +72,19 @@ public class GMapsDetailsPanel {
 	 */
 	public GMapsDetailsPanel(Composite parent, int style) {
 	    SashForm sash = new SashForm(parent, style | SWT.HORIZONTAL);
+
+	    map = new MapTile(sash, SWT.NONE);
+	    map.configureJavaSupport(new DetailsPanelMapSupport(map.getMapControl()));
+	    // Add the functions for Java <-> Javascript communication to the browser instance
+	    map.getFunctions().add(
+	    		new AddNewMarker(map.getMapControl(), MapWidgetConstants.BROWSER_FUNCTION_ADD_MARKER, map.getJavaMapSupport()));
+	    map.getFunctions().add(
+	    		new ClearMarkersList(map.getMapControl(), MapWidgetConstants.BROWSER_FUNCTION_CLEAR_MARKERS, map.getJavaMapSupport()));
+	    map.getFunctions().add(
+	    		new RemoveMarker(map.getMapControl(), MapWidgetConstants.BROWSER_FUNCTION_REMOVE_MARKER, map.getJavaMapSupport()));
+	    map.getFunctions().add(
+	    		new UpdateMarkerPosition(map.getMapControl(), MapWidgetConstants.BROWSER_FUCTION_UPDATE_MARKER_POSITION, map.getJavaMapSupport()));
 	    
-	    try {
-	    	mapControl = new Browser(sash, SWT.NONE);
-	    	mapControl.addControlListener(new ControlListener() {
-	 
-	          public void controlResized(ControlEvent e) {
-	        	  mapControl.execute("document.getElementById('map_canvas').style.width= "+ (mapControl.getSize().x - 20) + ";");
-	        	  mapControl.execute("document.getElementById('map_canvas').style.height= "+ (mapControl.getSize().y - 20) + ";");
-	          }
-	 
-	          public void controlMoved(ControlEvent e) {
-	          }
-	    });
-	    } catch (SWTError e) {
-	        MapActivator.logError("Could not instantiate the browser widget: ", e);
-	        return;
-	    }
 		
 		Composite containerCmp = new Composite(sash, SWT.BORDER);
 		containerCmp.setLayout(new GridLayout(1,true));
@@ -132,8 +114,8 @@ public class GMapsDetailsPanel {
 	    	public void widgetSelected(SelectionEvent e) {
 	    		LatLng coords = GMapUtils.getAddressCoordinates(addressLocation.getText());
 	    		if(coords!=null) {
-					jsMapSupport.evaluateJavascript("myMap.panTo(new google.maps.LatLng("+coords.getLat()+","+coords.getLng()+"));");
-					jsMapSupport.evaluateJavascript("myMap.addMarker(new google.maps.LatLng("+coords.getLat()+","+coords.getLng()+"));");
+					map.getJavascriptMapSupport().evaluateJavascript("myMap.panTo(new google.maps.LatLng("+coords.getLat()+","+coords.getLng()+"));");
+					map.getJavascriptMapSupport().evaluateJavascript("myMap.addMarker(new google.maps.LatLng("+coords.getLat()+","+coords.getLng()+"));");
 	    		}
 	    		else {
 	    			MessageDialog.openError(
@@ -155,8 +137,8 @@ public class GMapsDetailsPanel {
 	    mapZoom.addSelectionListener(new SelectionAdapter() {
 	    	@Override
 	    	public void widgetSelected(SelectionEvent e) {
-	    		jsMapSupport.evaluateJavascript("JAVA_TO_JAVASCRIPT_CALLED=true");
-	    		jsMapSupport.setZoomLevel(mapZoom.getSelection());
+	    		map.getJavascriptMapSupport().evaluateJavascript("JAVA_TO_JAVASCRIPT_CALLED=true");
+	    		map.getJavascriptMapSupport().setZoomLevel(mapZoom.getSelection());
 	    		zoomLevelLbl.setText("Zoom: " + mapZoom.getSelection());
 	    	}
 		});
@@ -172,14 +154,14 @@ public class GMapsDetailsPanel {
 	    b.setText("Delete markers");
 	    b.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
-	        	jsMapSupport.clearMarkers();
+	        	map.getJavascriptMapSupport().clearMarkers();
 	        }
 	    });
 	    markersList.addSelectionListener(new SelectionAdapter() {
 	    	@Override
 	    	public void widgetSelected(SelectionEvent e) {
 	    		int markerIdx = markersList.getSelectionIndex();
-	    		jsMapSupport.highlightMarker(markerIdx);
+	    		map.getJavascriptMapSupport().highlightMarker(markerIdx);
 	    	}
 		});
 	    markersList.addKeyListener(new KeyAdapter() {
@@ -187,28 +169,16 @@ public class GMapsDetailsPanel {
 	    	public void keyPressed(KeyEvent e) {
 	    		if(e.keyCode == SWT.DEL) {
 	    			int markerIdx = markersList.getSelectionIndex();
-					RemoveMarker.removeMarker(markerIdx, javaMapSupport);
-					jsMapSupport.evaluateJavascript("JAVA_TO_JAVASCRIPT_CALLED=true");
-					jsMapSupport.removeMarker(markerIdx);
+					RemoveMarker.removeMarker(markerIdx, map.getJavaMapSupport());
+					map.getJavascriptMapSupport().evaluateJavascript("JAVA_TO_JAVASCRIPT_CALLED=true");
+					map.getJavascriptMapSupport().removeMarker(markerIdx);
 	    		}
 	    	}
 		});
 
+	    map.activateMapTile();
+	    
 	    sash.setWeights(new int[] {4,1});
-	    
-	    jsMapSupport = new BaseJSMapSupport(mapControl);
-	    javaMapSupport = new DetailsPanelMapSupport(mapControl);
-
-	    // Add the functions for Java <-> Javascript communication to the browser instance
-	    new AddNewMarker(mapControl, MapWidgetConstants.BROWSER_FUNCTION_ADD_MARKER, javaMapSupport);
-	    new ClearMarkersList(mapControl, MapWidgetConstants.BROWSER_FUNCTION_CLEAR_MARKERS, javaMapSupport);
-	    new RemoveMarker(mapControl, MapWidgetConstants.BROWSER_FUNCTION_REMOVE_MARKER, javaMapSupport);
-	    new UpdateMarkerPosition(mapControl, MapWidgetConstants.BROWSER_FUCTION_UPDATE_MARKER_POSITION, javaMapSupport);
-	    new UpdateZoomLevel(mapControl, MapWidgetConstants.BROWSER_FUNCTION_UPDATE_ZOOM_LEVEL, javaMapSupport);
-	    new UpdateMapCenter(mapControl, MapWidgetConstants.BROWSER_FUNCTION_UPDATE_MAP_CENTER, javaMapSupport);
-	    new TestJavaCallSupport(mapControl, MapWidgetConstants.BROWSER_FUNCTION_TEST_JAVACALL_SUPPORT, javaMapSupport);
-	    
-	    mapControl.setUrl(MapActivator.getFileLocation("mapfiles/gmaps_library/map.html"));
 	}
 
 	class DetailsPanelMapSupport extends BaseJavaMapSupport{

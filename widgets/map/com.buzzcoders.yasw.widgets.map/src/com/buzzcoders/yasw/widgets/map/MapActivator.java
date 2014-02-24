@@ -13,12 +13,17 @@
 package com.buzzcoders.yasw.widgets.map;
 
 import java.io.IOException;
+import java.net.URL;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -27,6 +32,8 @@ import org.osgi.framework.BundleContext;
  * The activator class controls the plug-in life cycle
  */
 public class MapActivator extends AbstractUIPlugin {
+
+	public static final String FIND_BTN_IMG = "FIND_BTN";
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "com.buzzcoders.yasw.widgets.map"; //$NON-NLS-1$
@@ -102,6 +109,15 @@ public class MapActivator extends AbstractUIPlugin {
 			logError("A problem occurred when trying to open the map.html file", ex);
 		}
 		return fullPath;
+	}
+	
+	@Override
+	protected void initializeImageRegistry(ImageRegistry reg) {
+		Bundle bundle = Platform.getBundle(PLUGIN_ID);
+		IPath path = new Path("icons/find-20.png");
+		URL url = FileLocator.find(bundle, path, null);
+		ImageDescriptor desc = ImageDescriptor.createFromURL(url);
+		reg.put(FIND_BTN_IMG, desc);
 	}
 	
 }

@@ -2,6 +2,12 @@
 var IS_JAVA_SUPPORTED = false;
 var JAVA_TO_JAVASCRIPT_CALLED = false;
 
+// Other vars
+var _MENU_MINIMAL = "minimal"; // menu without markers stuff
+var _MENU_COMPLETE = "complete"; // menu with markers stuff
+var _MENU_NONE = "none"; // no menu 
+var MENU_KIND = _MENU_MINIMAL;
+
 /** 
  * Definition of the custom context menu.
  * It will inherit from google.maps.OverlayView class.
