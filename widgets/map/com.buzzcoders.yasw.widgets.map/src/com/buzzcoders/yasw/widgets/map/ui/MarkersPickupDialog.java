@@ -1,5 +1,7 @@
 package com.buzzcoders.yasw.widgets.map.ui;
 
+import java.util.ArrayList;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -26,14 +28,26 @@ import com.buzzcoders.yasw.widgets.map.browserfunctions.GMapEnabledFunction;
 import com.buzzcoders.yasw.widgets.map.browserfunctions.RemoveMarker;
 import com.buzzcoders.yasw.widgets.map.browserfunctions.UpdateMarkerPosition;
 import com.buzzcoders.yasw.widgets.map.core.LatLng;
+import com.buzzcoders.yasw.widgets.map.core.MapType;
 import com.buzzcoders.yasw.widgets.map.core.Marker;
 import com.buzzcoders.yasw.widgets.map.support.BaseJavaMapSupport;
 import com.buzzcoders.yasw.widgets.map.support.JavaMapSupport;
 
+/**
+ * This dialog allows to place a list of markers in the map.
+ * Markers can be moved/removed and their position is update accordingly.
+ * 
+ * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
+ *
+ */
 public class MarkersPickupDialog extends Dialog {
 	
-	private List markersList;
+	private java.util.List<LatLng> markers;
+	private List markersWidget;
 	private MapTile map;
+	private LatLng initialPosition;
+	private int zoom;
+	private MapType type;
 
 	/**
 	 * Create the dialog.
@@ -41,6 +55,40 @@ public class MarkersPickupDialog extends Dialog {
 	 */
 	public MarkersPickupDialog(Shell parentShell) {
 		super(parentShell);
+		this.markers=new ArrayList<LatLng>();
+	}
+	
+	/**
+	 * Sets the initial position of the map that will be used to pick-up a list
+	 * of markers.
+	 * 
+	 * @param initialPosition
+	 *            initial map center
+	 */
+	public void setInitialPosition(LatLng initialPosition) {
+		this.initialPosition = initialPosition;
+	}
+
+	/**
+	 * Sets the initial zoom level of the map that will be used to pick-up a
+	 * list of markers.
+	 * 
+	 * @param zoom
+	 *            initial zoom level
+	 */
+	public void setZoom(int zoom) {
+		this.zoom = zoom;
+	}
+
+	/**
+	 * Sets the initial type of the map that will be used to pick-up a list of
+	 * markers.
+	 * 
+	 * @param type
+	 *            the initial map type
+	 */
+	public void setType(MapType type) {
+		this.type = type;
 	}
 
 	/**
@@ -53,6 +101,7 @@ public class MarkersPickupDialog extends Dialog {
 		
 		SashForm sash = new SashForm(container, SWT.HORIZONTAL);
 		sash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		sash.setSashWidth(10);
 		
 		map = new MapTile(sash, SWT.BORDER);
 		map.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -91,8 +140,8 @@ public class MarkersPickupDialog extends Dialog {
 	    markersLbl.setText("Markers");
 	    markersLbl.setLayoutData(new GridData(SWT.TOP, SWT.LEFT, true, false));
 		
-	    markersList = new List(panelCmp, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-	    markersList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+	    markersWidget = new List(panelCmp, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+	    markersWidget.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	    Button delMarkersBtn = new Button(panelCmp, SWT.PUSH);
 	    delMarkersBtn.setLayoutData(new GridData(SWT.RIGHT,SWT.BOTTOM,false,false));
 	    delMarkersBtn.setText("Delete markers");
@@ -101,18 +150,18 @@ public class MarkersPickupDialog extends Dialog {
 	        	map.getJavascriptMapSupport().clearMarkers();
 	        }
 	    });
-	    markersList.addSelectionListener(new SelectionAdapter() {
+	    markersWidget.addSelectionListener(new SelectionAdapter() {
 	    	@Override
 	    	public void widgetSelected(SelectionEvent e) {
-	    		int markerIdx = markersList.getSelectionIndex();
+	    		int markerIdx = markersWidget.getSelectionIndex();
 	    		map.getJavascriptMapSupport().highlightMarker(markerIdx);
 	    	}
 		});
-	    markersList.addKeyListener(new KeyAdapter() {
+	    markersWidget.addKeyListener(new KeyAdapter() {
 	    	@Override
 	    	public void keyPressed(KeyEvent e) {
 	    		if(e.keyCode == SWT.DEL) {
-	    			int markerIdx = markersList.getSelectionIndex();
+	    			int markerIdx = markersWidget.getSelectionIndex();
 					RemoveMarker.removeMarker(markerIdx, map.getJavaMapSupport());
 					map.getJavascriptMapSupport().evaluateJavascript("JAVA_TO_JAVASCRIPT_CALLED=true");
 					map.getJavascriptMapSupport().removeMarker(markerIdx);
@@ -152,6 +201,29 @@ public class MarkersPickupDialog extends Dialog {
 		return true;
 	};
 
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText("Add markers on the map");
+	}
+	
+	/**
+	 * Returns the list of markers added on the map.
+	 * It's a list of coordinates.
+	 * 
+	 * @return list of markers
+	 */
+	public java.util.List<LatLng> getMarkersList() {
+		return markers;
+	}
+	
+	/**
+	 * Browser function for correctly configuring the initial settings of the
+	 * map.
+	 * 
+	 * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
+	 * 
+	 */
 	class InitialConfigurationFunction extends GMapEnabledFunction {
 
 		public InitialConfigurationFunction(Browser browser, String name,
@@ -161,12 +233,29 @@ public class MarkersPickupDialog extends Dialog {
 		
 		@Override
 		public Object function(Object[] arguments) {
-			getMapSupport().getBrowserControl().evaluate("MENU_KIND=_MENU_COMPLETE");
+			map.getJavascriptMapSupport().evaluateJavascript("MENU_KIND=_MENU_COMPLETE");
+			if(initialPosition!=null){
+				map.getJavascriptMapSupport().setMapCenter(initialPosition);
+			}
+			if(type!=null){
+				map.getJavascriptMapSupport().setMapType(type);
+			}
+			if(zoom!=0) {
+				map.getJavascriptMapSupport().setZoomLevel(zoom);
+			}
+			
 			return null;
 		}
 		
 	}
 	
+	/**
+	 * Custom Java map support. We need to update properly the dialog UI 
+	 * and internal components.
+	 * 
+	 * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
+	 *
+	 */
 	class PanelJavaMapSupport extends BaseJavaMapSupport{
 
 		PanelJavaMapSupport(Browser browser) {
@@ -176,25 +265,28 @@ public class MarkersPickupDialog extends Dialog {
 		@Override
 		public void removeMarker(int markerIndex) {
 			super.removeMarker(markerIndex);
-			markersList.remove(markerIndex);
+			markersWidget.remove(markerIndex);
+			markers.remove(markerIndex);
 		}
 		
 		@Override
 		public void highlightMarker(int markerIdx) {
 			super.highlightMarker(markerIdx);
-			markersList.setSelection(markerIdx);
+			markersWidget.setSelection(markerIdx);
 		}
 		
 		@Override
 		public void updateMarkerPosition(int markerIdx, LatLng newPosition) {
 			super.updateMarkerPosition(markerIdx, newPosition);
-			markersList.setItem(markerIdx, newPosition.getLat() + " : " + newPosition.getLng());
+			markersWidget.setItem(markerIdx, 
+					String.format("%.6f",newPosition.getLat()) + " : " + String.format("%.6f",newPosition.getLng()));
 		}
 		
 		@Override
 		public void clearMarkers() {
 			super.clearMarkers();
-			markersList.removeAll();
+			markersWidget.removeAll();
+			markers.clear();
 		}
 		
 		@Override
@@ -202,7 +294,8 @@ public class MarkersPickupDialog extends Dialog {
 			int mIdx = getMarkers().indexOf(oldMarker);
 			if(mIdx>0){
 				getMarkers().remove(mIdx);
-				markersList.remove(mIdx);
+				markersWidget.remove(mIdx);
+				markers.remove(mIdx);
 			}
 			else {
 				// FIXME do nothing or raise error (at least log)?!
@@ -213,8 +306,9 @@ public class MarkersPickupDialog extends Dialog {
 		public void addNewMarker(Marker newMarker) {
 			super.addNewMarker(newMarker);
 			LatLng position = newMarker.getPosition();
-			markersList.add(
+			markersWidget.add(
 					String.format("%.6f",position.getLat()) + " : " + String.format("%.6f",position.getLng()));
+			markers.add(position);
 		}
 		
 	}
