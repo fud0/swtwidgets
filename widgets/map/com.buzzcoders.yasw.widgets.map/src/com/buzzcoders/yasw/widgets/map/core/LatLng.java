@@ -49,20 +49,17 @@ public class LatLng implements Serializable {
 	 * @param noWrap flag to allow values outside the ranges
 	 */
 	public LatLng(Double lat, Double lng, boolean noWrap) {
-		if (noWrap) {
-			this.lat = lat % 180;
-			this.lng = lng % 90;
-		} else {
-			if (Math.abs(lat) > 180) {
+		this.lat = lat;
+		this.lng = lng;
+		if(!noWrap){
+			if (Math.abs(lat) > 90) {
 				throw new RuntimeException(
 						"You must specify the \'noWrap\' setting to true in order to allow latitude values outside the range");
 			}
-			if (Math.abs(lng) > 90) {
+			if (Math.abs(lng) > 180) {
 				throw new RuntimeException(
 						"You must specify the \'noWrap\' setting to true in order to allow longitude values outside the range");
 			}
-			this.lat = lat;
-			this.lng = lng;
 		}
 	}
 
@@ -77,7 +74,7 @@ public class LatLng implements Serializable {
 	 * @return the longitude in degrees.
 	 */
 	public Double getLng() {
-		return this.lng;
+		return this.lng % 180;
 	}
 
 	/**
@@ -91,16 +88,17 @@ public class LatLng implements Serializable {
 	 * @return the latitude in degrees.
 	 */
 	public Double getLat() {
-		return this.lat;
+		return this.lat % 90;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof LatLng) {
 			LatLng coords = (LatLng) obj;
-			return this.lat == coords.getLat() && this.lng == coords.getLng();
+			return getLat() == coords.getLat() && getLng() == coords.getLng();
 		}
 		return false;
 	}
 
+	
 }
