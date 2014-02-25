@@ -291,8 +291,8 @@ GMapsMap.prototype.getCenter=function(){
 	return this.map.getCenter();
 };
 
-GMapsMap.prototype.setCenter=function(lat,lng){
-	this.map.setCenter(lat,lng);
+GMapsMap.prototype.setCenter=function(latlng){
+	this.map.setCenter(latlng);
 };
 
 GMapsMap.prototype.setMapType=function(mapType){

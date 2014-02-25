@@ -50,7 +50,9 @@ public class BaseJSMapSupport implements JSMapSupport {
 
 	@Override
 	public void setMapCenter(LatLng position) {
-		getBrowserControl().evaluate(mapId+".setCenter("+position.getLat()+","+position.getLng()+");");
+		String positionVar = "new google.maps.LatLng("
+				+ position.getLat() + "," + position.getLng() + ")";
+		getBrowserControl().evaluate(mapId+".setCenter("+positionVar+");");
 	}
 
 	@Override
