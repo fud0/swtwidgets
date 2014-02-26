@@ -34,12 +34,14 @@ import org.eclipse.ui.PlatformUI;
 import com.buzzcoders.yasw.widgets.map.MapWidgetConstants;
 import com.buzzcoders.yasw.widgets.map.browserfunctions.AddNewMarker;
 import com.buzzcoders.yasw.widgets.map.browserfunctions.ClearMarkersList;
+import com.buzzcoders.yasw.widgets.map.browserfunctions.GMapEnabledFunction;
 import com.buzzcoders.yasw.widgets.map.browserfunctions.RemoveMarker;
 import com.buzzcoders.yasw.widgets.map.browserfunctions.UpdateMarkerPosition;
 import com.buzzcoders.yasw.widgets.map.core.LatLng;
 import com.buzzcoders.yasw.widgets.map.core.Marker;
 import com.buzzcoders.yasw.widgets.map.support.BaseJavaMapSupport;
 import com.buzzcoders.yasw.widgets.map.support.GMapUtils;
+import com.buzzcoders.yasw.widgets.map.support.JavaMapSupport;
 
 /**
  * This class implements the support for the Google Map component. The panel
@@ -84,7 +86,8 @@ public class GMapsDetailsPanel {
 	    		new RemoveMarker(map.getMapControl(), MapWidgetConstants.BROWSER_FUNCTION_REMOVE_MARKER, map.getJavaMapSupport()));
 	    map.getFunctions().add(
 	    		new UpdateMarkerPosition(map.getMapControl(), MapWidgetConstants.BROWSER_FUCTION_UPDATE_MARKER_POSITION, map.getJavaMapSupport()));
-	    
+		map.getFunctions().add(
+				new InitialConfigurationFunction(map.getMapControl(), MapWidgetConstants.BROWSER_FUNCTION_INITIAL_CONFIGURATION, map.getJavaMapSupport()));
 		
 		Composite containerCmp = new Composite(sash, SWT.BORDER);
 		containerCmp.setLayout(new GridLayout(1,true));
@@ -181,6 +184,28 @@ public class GMapsDetailsPanel {
 	    sash.setWeights(new int[] {4,1});
 	}
 
+	/**
+	 * Browser function for correctly configuring the initial settings of the
+	 * map.
+	 * 
+	 * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
+	 * 
+	 */
+	class InitialConfigurationFunction extends GMapEnabledFunction {
+
+		public InitialConfigurationFunction(Browser browser, String name,
+				JavaMapSupport mapSupport) {
+			super(browser, name, mapSupport);
+		}
+		
+		@Override
+		public Object function(Object[] arguments) {
+			map.getJavascriptMapSupport().evaluateJavascript("MENU_KIND=_MENU_COMPLETE");
+			return null;
+		}
+		
+	}
+	
 	class DetailsPanelMapSupport extends BaseJavaMapSupport{
 
 		DetailsPanelMapSupport(Browser browser) {
