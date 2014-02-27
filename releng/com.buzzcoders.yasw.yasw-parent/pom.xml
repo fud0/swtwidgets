@@ -61,7 +61,7 @@
 				<artifactId>tycho-packaging-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<format>'beta-v'yyyyMMddHHmm</format>
+					<format>'v'yyyyMMdd'-'HHmm</format>
 					<finalName>${project.artifactId}_${project.version}.${buildQualifier}</finalName>
 				</configuration>
 			</plugin>
