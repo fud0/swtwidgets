@@ -28,6 +28,12 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * A bunch of utility methods to deal with the map component.
+ * 
+ * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
+ *
+ */
 public class GMapUtils {
 	
 	public static final int OPTIONS_LAT_INDEX = 0;
@@ -37,6 +43,12 @@ public class GMapUtils {
 	public static final int OPTIONS_VISIBLE_INDEX = 4;
 	public static final int OPTIONS_CLICKABLE_INDEX = 5;
 
+	/**
+	 * Returns the marker options extracted from the specified arguments.
+	 * 
+	 * @param arguments the arguments containing the information
+	 * @return {@link MarkerOptions} instance
+	 */
 	public static MarkerOptions getMarkerOptions(Object[] arguments) {
 		MarkerOptions options = new MarkerOptions();
 		// LatLng
@@ -54,10 +66,22 @@ public class GMapUtils {
 		return options;
 	}
 	
+	/**
+	 * Returns the position extracted from the specified arguments.
+	 * 
+	 * @param arguments the arguments containing the information
+	 * @return the latitude and longitude information
+	 */
 	public static LatLng getPosition(Object[] arguments) {
 		return new LatLng((Double) arguments[0],(Double) arguments[1]);
 	}
 
+	/**
+	 * Returns the type of animation given the specific value.
+	 * 
+	 * @param value value representing the marker animation
+	 * @return the animation type
+	 */
 	public static Animation getMarkerAnimation(Double value) {
 		if(value!=null){
 			switch (value.intValue()) {
@@ -74,6 +98,12 @@ public class GMapUtils {
 		return null;
 	}
 
+	/**
+	 * Returns the coordinates of the specified address.
+	 * 
+	 * @param addressText the address to look
+	 * @return the latitude and longitude information
+	 */
 	public static LatLng getAddressCoordinates(String addressText) {
 		LatLng coordinates = null;
 		GetMethod locateAddressGET = null;
