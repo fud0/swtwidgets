@@ -19,15 +19,15 @@ package com.buzzcoders.yasw.widgets.map;
 public interface MapWidgetConstants {
 	
 	// Names for the different functions that invoked from HTML/Javascript will callback Java code 
-	public static final String BROWSER_FUNCTION_ADD_MARKER = "javaCall_AddMarker";
-	public static final String BROWSER_FUNCTION_REMOVE_MARKER = "javaCall_DelMarker";
-	public static final String BROWSER_FUNCTION_CLEAR_MARKERS = "javaCall_ClearMarkers";
-	public static final String BROWSER_FUCTION_UPDATE_MARKER_POSITION = "javaCall_UpdateMarkerPosition";
-	public static final String BROWSER_FUNCTION_UPDATE_ZOOM_LEVEL = "javaCall_UpdateZoomLevel";
-	public static final String BROWSER_FUNCTION_UPDATE_MAP_CENTER = "javaCall_UpdateMapCenter";
-	public static final String BROWSER_FUNCTION_TEST_JAVACALL_SUPPORT = "javaCall_TestJavaCallSupport";
-	public static final String BROWSER_FUNCTION_UPDATE_MAP_TYPE = "javaCall_UpdateMapType";
-	public static final String BROWSER_FUNCTION_INITIAL_CONFIGURATION = "javaCall_InitialConfiguration";
+	public static final String BROWSER_FUNCTION_ADD_MARKER = "javaCall_AddMarker"; //$NON-NLS-1$
+	public static final String BROWSER_FUNCTION_REMOVE_MARKER = "javaCall_DelMarker"; //$NON-NLS-1$
+	public static final String BROWSER_FUNCTION_CLEAR_MARKERS = "javaCall_ClearMarkers"; //$NON-NLS-1$
+	public static final String BROWSER_FUCTION_UPDATE_MARKER_POSITION = "javaCall_UpdateMarkerPosition"; //$NON-NLS-1$
+	public static final String BROWSER_FUNCTION_UPDATE_ZOOM_LEVEL = "javaCall_UpdateZoomLevel"; //$NON-NLS-1$
+	public static final String BROWSER_FUNCTION_UPDATE_MAP_CENTER = "javaCall_UpdateMapCenter"; //$NON-NLS-1$
+	public static final String BROWSER_FUNCTION_TEST_JAVACALL_SUPPORT = "javaCall_TestJavaCallSupport"; //$NON-NLS-1$
+	public static final String BROWSER_FUNCTION_UPDATE_MAP_TYPE = "javaCall_UpdateMapType"; //$NON-NLS-1$
+	public static final String BROWSER_FUNCTION_INITIAL_CONFIGURATION = "javaCall_InitialConfiguration"; //$NON-NLS-1$
 	
 	
 }

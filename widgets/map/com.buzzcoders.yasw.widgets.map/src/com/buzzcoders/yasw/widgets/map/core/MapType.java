@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.buzzcoders.yasw.widgets.map.core;
 
+import com.buzzcoders.yasw.widgets.map.messages.Messages;
+
 /**
  * The common types that can be set on a Google Map.
  * 
@@ -19,10 +21,10 @@ package com.buzzcoders.yasw.widgets.map.core;
  *
  */
 public enum MapType {
-	ROADMAP("roadmap","google.maps.MapTypeId.ROADMAP"),
-	SATELLITE("satellite","google.maps.MapTypeId.SATELLITE"),
-	TERRAIN("terrain","google.maps.MapTypeId.TERRAIN"),
-	HYBRID("hybrid","google.maps.MapTypeId.HYBRID");
+	ROADMAP("roadmap","google.maps.MapTypeId.ROADMAP"), //$NON-NLS-1$ //$NON-NLS-2$
+	SATELLITE("satellite","google.maps.MapTypeId.SATELLITE"), //$NON-NLS-1$ //$NON-NLS-2$
+	TERRAIN("terrain","google.maps.MapTypeId.TERRAIN"), //$NON-NLS-1$ //$NON-NLS-2$
+	HYBRID("hybrid","google.maps.MapTypeId.HYBRID"); //$NON-NLS-1$ //$NON-NLS-2$
 	
 	private String stringID;
 	private String googleConstant;
@@ -46,6 +48,6 @@ public enum MapType {
 				return val;
 			}
 		}
-		throw new IllegalArgumentException("No MapType found for the specified stringID value.");
+		throw new IllegalArgumentException(Messages.MapType_InvalidType);
 	}
 }

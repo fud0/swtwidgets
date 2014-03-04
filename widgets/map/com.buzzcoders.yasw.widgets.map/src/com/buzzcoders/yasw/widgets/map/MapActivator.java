@@ -26,12 +26,14 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
+import com.buzzcoders.yasw.widgets.map.messages.Messages;
+
 /**
  * The activator class controls the plug-in life cycle
  */
 public class MapActivator extends AbstractUIPlugin {
 
-	public static final String FIND_BTN_IMG = "FIND_BTN";
+	public static final String FIND_BTN_IMG = "FIND_BTN"; //$NON-NLS-1$
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "com.buzzcoders.yasw.widgets.map"; //$NON-NLS-1$
@@ -52,6 +54,8 @@ public class MapActivator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		// trick used to unpack the dir content to filesystem
+		getFileLocation("mapfiles/gmaps_library/"); //$NON-NLS-1$
 	}
 
 	/*
@@ -104,7 +108,7 @@ public class MapActivator extends AbstractUIPlugin {
 			}
 		}
 		catch (IOException ex) {
-			logError("A problem occurred when trying to open the map.html file", ex);
+			logError(Messages.MapActivator_FileError, ex);
 		}
 		return fullPath;
 	}
@@ -112,7 +116,7 @@ public class MapActivator extends AbstractUIPlugin {
 	@Override
 	protected void initializeImageRegistry(ImageRegistry reg) {
 		Bundle bundle = Platform.getBundle(PLUGIN_ID);
-		IPath path = new Path("icons/find-20.png");
+		IPath path = new Path("icons/find-20.png"); //$NON-NLS-1$
 		URL url = FileLocator.find(bundle, path, null);
 		ImageDescriptor desc = ImageDescriptor.createFromURL(url);
 		reg.put(FIND_BTN_IMG, desc);

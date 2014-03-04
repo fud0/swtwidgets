@@ -33,6 +33,7 @@ import com.buzzcoders.yasw.widgets.map.MapActivator;
 import com.buzzcoders.yasw.widgets.map.core.LatLng;
 import com.buzzcoders.yasw.widgets.map.core.MapType;
 import com.buzzcoders.yasw.widgets.map.core.Marker;
+import com.buzzcoders.yasw.widgets.map.messages.Messages;
 import com.buzzcoders.yasw.widgets.map.support.BaseJavaMapSupport;
 import com.buzzcoders.yasw.widgets.map.support.GMapUtils;
 
@@ -75,7 +76,7 @@ public class BasicInfoMapDialog extends Dialog {
 		
 		Label addressLbl = new Label(mainCmp,SWT.NONE);
 		addressLbl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-		addressLbl.setText("Address Lookup:");
+		addressLbl.setText(Messages.BasicInfoMapDialog_AddressLookup);
 		
 		final Text addressBar = new Text(mainCmp, SWT.BORDER);
 		addressBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -133,7 +134,7 @@ public class BasicInfoMapDialog extends Dialog {
 		}
 		else {
 			MessageDialog.openError(UIUtils.getShell(), 
-					"Geo-location error", "Unable to locate the specified address. Please verify it is correct.");
+					Messages.BasicInfoMapDialog_LocationErrorTitle, Messages.BasicInfoMapDialog_LocationErrorMsg);
 		}
 	}
 
@@ -192,10 +193,10 @@ public class BasicInfoMapDialog extends Dialog {
 	private void updateTitle(){
 		if(mapCenter!=null && zoomLevel!=0 && mapType!=null) {
 			getShell().setText(
-					NLS.bind("Map centered at: ({0},{1}) | Zoom level: {2} | Map Type: {3}",
+					NLS.bind(Messages.BasicInfoMapDialog_Title,
 							new Object[]{
-							String.format("%.6f", mapCenter.getLat()),
-							String.format("%.6f", mapCenter.getLng()),
+							String.format("%.6f", mapCenter.getLat()), //$NON-NLS-1$
+							String.format("%.6f", mapCenter.getLng()), //$NON-NLS-1$
 							String.valueOf(zoomLevel),
 							this.mapType}));
 		}

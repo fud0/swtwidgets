@@ -37,6 +37,7 @@ import com.buzzcoders.yasw.widgets.map.browserfunctions.RemoveMarker;
 import com.buzzcoders.yasw.widgets.map.browserfunctions.UpdateMarkerPosition;
 import com.buzzcoders.yasw.widgets.map.core.LatLng;
 import com.buzzcoders.yasw.widgets.map.core.Marker;
+import com.buzzcoders.yasw.widgets.map.messages.Messages;
 import com.buzzcoders.yasw.widgets.map.support.BaseJavaMapSupport;
 import com.buzzcoders.yasw.widgets.map.support.GMapUtils;
 import com.buzzcoders.yasw.widgets.map.support.JavaMapSupport;
@@ -91,14 +92,14 @@ public class GMapsDetailsPanel {
 		containerCmp.setLayout(new GridLayout(1,true));
 		
 		Label mapCenterLbl = new Label(containerCmp,SWT.NONE);
-		mapCenterLbl.setText("Map Center:");
+		mapCenterLbl.setText(Messages.GMapsDetailsPanel_MapCenterLbl);
 		
 		mapCenterCoordinatesLbl = new Label(containerCmp,SWT.NONE);
-		mapCenterCoordinatesLbl.setText("<?,?>");
+		mapCenterCoordinatesLbl.setText(Messages.GMapsDetailsPanel_NoCoordinates);
 		mapCenterCoordinatesLbl.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,false));
 		
 		Label addressLocationLbl = new Label(containerCmp, SWT.NONE);
-		addressLocationLbl.setText("Look for an address:");
+		addressLocationLbl.setText(Messages.GMapsDetailsPanel_AddressLookup);
 		
 	    Group searchGrp = new Group(containerCmp,SWT.BORDER);
 	    searchGrp.setLayout(new GridLayout(2,false));
@@ -109,7 +110,7 @@ public class GMapsDetailsPanel {
 	    
 	    goToBtn=new Button(searchGrp, SWT.PUSH);
 	    goToBtn.setLayoutData(new GridData(SWT.RIGHT,SWT.CENTER,true,false,2,1));
-	    goToBtn.setText("Find");
+	    goToBtn.setText(Messages.GMapsDetailsPanel_FindBtn);
 	    goToBtn.addSelectionListener(new SelectionAdapter() {
 	    	@Override
 	    	public void widgetSelected(SelectionEvent e) {
@@ -121,13 +122,13 @@ public class GMapsDetailsPanel {
 	    		else {
 	    			MessageDialog.openError(
 	    					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-	    					"Geo-location error", "Unable to locate the specified address. Please verify it is correct.");
+	    					Messages.GMapsDetailsPanel_LocationErrorTitle, Messages.GMapsDetailsPanel_LocationErrorMsg);
 	    		}
 	    	}
 		});
 	    
 	    zoomLevelLbl = new Label(containerCmp, SWT.NONE);
-	    zoomLevelLbl.setText("Zoom");
+	    zoomLevelLbl.setText(Messages.GMapsDetailsPanel_ZoomLbl1);
 	    zoomLevelLbl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 	    
 	    mapZoom = new Scale(containerCmp, SWT.NONE);
@@ -140,19 +141,19 @@ public class GMapsDetailsPanel {
 	    	public void widgetSelected(SelectionEvent e) {
 	    		map.getJavascriptMapSupport().evaluateJavascript("JAVA_TO_JAVASCRIPT_CALLED=true");
 	    		map.getJavascriptMapSupport().setZoomLevel(mapZoom.getSelection());
-	    		zoomLevelLbl.setText("Zoom: " + mapZoom.getSelection());
+	    		zoomLevelLbl.setText(Messages.GMapsDetailsPanel_ZoomLbl2 + mapZoom.getSelection());
 	    	}
 		});
 
 	    Label markersLbl = new Label(containerCmp,SWT.NONE);
-	    markersLbl.setText("Markers");
+	    markersLbl.setText(Messages.GMapsDetailsPanel_MarkersLbl);
 	    markersLbl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 	    
 	    markersList = new List(containerCmp, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 	    markersList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	    Button b = new Button(containerCmp, SWT.PUSH);
 	    b.setLayoutData(new GridData(SWT.RIGHT,SWT.FILL,false,false));
-	    b.setText("Delete markers");
+	    b.setText(Messages.GMapsDetailsPanel_DeleteMarkersBtn);
 	    b.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
 	        	map.getJavascriptMapSupport().clearMarkers();
@@ -257,7 +258,7 @@ public class GMapsDetailsPanel {
 		public void setZoomLevel(int newZoomLevel) {
 			super.setZoomLevel(newZoomLevel);
 			mapZoom.setSelection(newZoomLevel);
-			zoomLevelLbl.setText("Zoom: " + newZoomLevel);
+			zoomLevelLbl.setText(Messages.GMapsDetailsPanel_ZoomLbl2 + newZoomLevel);
 		}
 		
 		@Override

@@ -28,7 +28,7 @@ public class TestJavaCallSupport extends GMapEnabledFunction {
 	
 	@Override
 	public Object function(Object[] arguments) {
-		getMapSupport().getBrowserControl().evaluate("alert('Test message: Java<->Javascript communitcation supported'");
+		getMapSupport().getBrowserControl().evaluate("alert('Test message: Java<->Javascript communitcation supported'");//$NON-NLS-1$
 		return null;
 	}
 

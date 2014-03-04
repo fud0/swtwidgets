@@ -40,6 +40,7 @@ import com.buzzcoders.yasw.widgets.map.browserfunctions.UpdateMarkerPosition;
 import com.buzzcoders.yasw.widgets.map.core.LatLng;
 import com.buzzcoders.yasw.widgets.map.core.MapType;
 import com.buzzcoders.yasw.widgets.map.core.Marker;
+import com.buzzcoders.yasw.widgets.map.messages.Messages;
 import com.buzzcoders.yasw.widgets.map.support.BaseJavaMapSupport;
 import com.buzzcoders.yasw.widgets.map.support.JavaMapSupport;
 
@@ -147,14 +148,14 @@ public class MarkersPickupDialog extends Dialog {
 		panelCmp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	    
 		Label markersLbl = new Label(panelCmp,SWT.NONE);
-	    markersLbl.setText("Markers");
+	    markersLbl.setText(Messages.MarkersPickupDialog_MarkersLbl);
 	    markersLbl.setLayoutData(new GridData(SWT.TOP, SWT.LEFT, true, false));
 		
 	    markersWidget = new List(panelCmp, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 	    markersWidget.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	    Button delMarkersBtn = new Button(panelCmp, SWT.PUSH);
 	    delMarkersBtn.setLayoutData(new GridData(SWT.RIGHT,SWT.BOTTOM,false,false));
-	    delMarkersBtn.setText("Delete markers");
+	    delMarkersBtn.setText(Messages.MarkersPickupDialog_DeleteMarkersBtn);
 	    delMarkersBtn.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
 	        	map.getJavascriptMapSupport().clearMarkers();
@@ -214,7 +215,7 @@ public class MarkersPickupDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Add markers on the map");
+		newShell.setText(Messages.MarkersPickupDialog_Title);
 	}
 	
 	/**

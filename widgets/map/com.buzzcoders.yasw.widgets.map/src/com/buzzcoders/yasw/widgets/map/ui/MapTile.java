@@ -23,6 +23,7 @@ import com.buzzcoders.yasw.widgets.map.browserfunctions.TestJavaCallSupport;
 import com.buzzcoders.yasw.widgets.map.browserfunctions.UpdateMapCenter;
 import com.buzzcoders.yasw.widgets.map.browserfunctions.UpdateMapType;
 import com.buzzcoders.yasw.widgets.map.browserfunctions.UpdateZoomLevel;
+import com.buzzcoders.yasw.widgets.map.messages.Messages;
 import com.buzzcoders.yasw.widgets.map.support.BaseJSMapSupport;
 import com.buzzcoders.yasw.widgets.map.support.BaseJavaMapSupport;
 import com.buzzcoders.yasw.widgets.map.support.JSMapSupport;
@@ -81,7 +82,7 @@ public class MapTile {
 			javaMapSupp=javaSupport;	
 		}
 		else {
-			throw new RuntimeException("Java support for the map tile is already configured!");
+			throw new RuntimeException(Messages.MapTile_JavaSupportAlreadyDefinedError);
 		}
 	    
 	}
@@ -91,7 +92,7 @@ public class MapTile {
 			jsMapSupp=jsSupport;
 		}
 		else {
-			throw new RuntimeException("Javascript support for the map tile is already configured!");
+			throw new RuntimeException(Messages.MapTile_JavascriptSupportAlreadyDefined);
 		}
 	}
 	

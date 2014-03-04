@@ -17,6 +17,7 @@ import org.eclipse.swt.browser.Browser;
 import com.buzzcoders.yasw.widgets.map.core.LatLng;
 import com.buzzcoders.yasw.widgets.map.core.MapType;
 import com.buzzcoders.yasw.widgets.map.core.Marker;
+import com.buzzcoders.yasw.widgets.map.messages.Messages;
 
 /**
  * Basic implementation of the support to the map component (Javascript side).
@@ -31,7 +32,7 @@ public class BaseJSMapSupport implements JSMapSupport {
 	private String mapId;
 	
 	public BaseJSMapSupport(Browser browser){
-		this(browser,"myMap");
+		this(browser,"myMap");//$NON-NLS-1$
 	}
 	
 	public BaseJSMapSupport(Browser browser, String mapId) {
@@ -76,7 +77,7 @@ public class BaseJSMapSupport implements JSMapSupport {
 	@Override
 	public void removeMarker(Marker oldMarker) {
 		// TODO - A check on position could be fine?!
-		throw new UnsupportedOperationException("This method is not supported yet.");
+		throw new UnsupportedOperationException(Messages.BaseJSMapSupport_UnsupportedMethodError);
 	}
 
 	@Override
@@ -93,7 +94,7 @@ public class BaseJSMapSupport implements JSMapSupport {
 	public List<Marker> getMarkers() {
 		// TODO - we could get back an XML representation of the markers as string
 		//		  and later convert them.
-		throw new UnsupportedOperationException("This method is not supported yet.");
+		throw new UnsupportedOperationException(Messages.BaseJSMapSupport_UnsupportedMethodError);
 	}
 
 	@Override
