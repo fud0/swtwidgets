@@ -9,7 +9,7 @@
 
 	<parent>
 		<groupId>com.buzzcoders.yasw</groupId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.1-SNAPSHOT</version>
 		<artifactId>yasw-release</artifactId>
 		<relativePath>../com.buzzcoders.yasw.yasw-release</relativePath>
 	</parent>
@@ -18,6 +18,6 @@
 	<artifactId>com.buzzcoders.yasw.updatesite</artifactId>
 	<packaging>eclipse-update-site</packaging>
 	<name>YASW Library Plugins Update Site</name>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 
 </project>

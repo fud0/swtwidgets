@@ -2,7 +2,7 @@
 <feature
       id="com.buzzcoders.yasw.widgets.map.feature"
       label="YASW Map widget"
-      version="1.0.0.qualifier"
+      version="1.0.1.qualifier"
       provider-name="Buzzcoders.com">
 
    <description url="https://github.com/fud0/yasw-library">

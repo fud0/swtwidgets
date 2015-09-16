@@ -2,7 +2,7 @@
 <feature
       id="com.buzzcoders.yasw.feature"
       label="YASW Library Feature"
-      version="1.0.0.qualifier"
+      version="1.0.1.qualifier"
       provider-name="Buzzcoders.com">
 
    <description url="http://www.example.com/description">
