@@ -104,7 +104,7 @@ public class MapActivator extends AbstractUIPlugin {
 		String fullPath = null;
 		try {
 			if (bundle != null) {
-				fullPath = FileLocator.toFileURL(bundle.getEntry(path)).getPath();
+				fullPath = new Path(FileLocator.toFileURL(bundle.getEntry(path)).getPath()).toOSString();
 			}
 		}
 		catch (IOException ex) {
